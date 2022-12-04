@@ -2,6 +2,12 @@ use std::collections::BTreeSet;
 use std::fs::File;
 use std::io::{self, prelude::*, BufReader};
 
+/* A faster way would be to have the first interval in a vector
+    and then to add the lower bound of interval 2 and sort the vector.
+    Repeat for the higher bound of interval 2 if needed. 
+    Looking at which position the entered bounds end up
+    should solve both parts faster */
+
 fn main(){
     let file_name: &str = "input.in";
     let _a = part1(file_name);
