@@ -2,6 +2,75 @@ use std::io;
 
 fn main() {
     let _a = part1();
+    let _b = part2();
+}
+
+fn part2() -> io::Result<()> {
+    let input = include_str!("../input.in");
+
+    let mut forrest_matrix: Vec<Vec<u8>> = Vec::<Vec<u8>>::new();
+
+    for row in input.lines() {
+        let tmp: Vec<u8> = row.chars().map(|c| c as u8 - 48).collect();
+        forrest_matrix.append(&mut vec![tmp]);
+    }
+
+    let mut best: u32 = 0;
+    for row in 1..forrest_matrix.len() - 1 {
+        for col in 1..forrest_matrix[0].len() - 1 {
+            let res = scenic_score(row, col, &forrest_matrix);
+            if res > best {
+                best = res;
+            }
+        }
+    }
+
+    println!("Best scenic score is: {}", best);
+
+    Ok(())
+}
+
+fn scenic_score(row: usize, col: usize, forrest_matrix: &Vec<Vec<u8>>) -> u32 {
+    let mut score: Vec<u32> = vec![0, 0, 0, 0];
+    let curr_tree_hight: u8 = forrest_matrix[row][col];
+
+    // up
+    for r in (0..row).rev() {
+        if forrest_matrix[r][col] >= curr_tree_hight {
+            score[0] += 1;
+            break;
+        }
+        score[0] += 1;
+    }
+
+    // left
+    for c in (0..col).rev() {
+        if forrest_matrix[row][c] >= curr_tree_hight {
+            score[1] += 1;
+            break;
+        }
+        score[1] += 1;
+    }
+
+    // right
+    for c in col + 1..forrest_matrix[0].len() {
+        if forrest_matrix[row][c] >= curr_tree_hight {
+            score[2] += 1;
+            break;
+        }
+        score[2] += 1;
+    }
+
+    // down
+    for r in row + 1..forrest_matrix.len() {
+        if forrest_matrix[r][col] >= curr_tree_hight {
+            score[3] += 1;
+            break;
+        }
+        score[3] += 1;
+    }
+
+    score[0] * score[1] * score[2] * score[3]
 }
 
 fn part1() -> io::Result<()> {
